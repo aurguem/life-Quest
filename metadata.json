@@ -1,0 +1,5 @@
+{
+  "name": "라이프퀘스트 RPG",
+  "description": "일상을 RPG 모험으로 바꿔주는 게이미피케이션 습관 추적기입니다. Gemini를 통한 기분 분석 기반 동적 퀘스트, 스탯 시각화, 그리고 조용한 소셜 모닥불 기능을 제공합니다.",
+  "requestFramePermissions": []
+}

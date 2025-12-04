@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>라이프퀘스트 RPG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom scrollbar for cyberpunk feel */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1e293b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #475569;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+      /* Fire animation for Campfire */
+      @keyframes flicker {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(0.98); }
+      }
+      .fire-glow {
+        animation: flicker 3s infinite ease-in-out;
+      }
+      /* Animation utilities */
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
