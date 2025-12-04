@@ -1,10 +1,6 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { MoodAnalysisResult, StatType } from "../types";
 
-// Initialize Gemini Client
-// IMPORTANT: API Key is handled via process.env.API_KEY environment variable.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const MODEL_NAME = 'gemini-2.5-flash';
 
 const moodAnalysisSchema: Schema = {
@@ -42,8 +38,22 @@ const moodAnalysisSchema: Schema = {
   required: ['moodScore', 'analysis', 'suggestedQuests'],
 };
 
+// Lazy initialization holder
+let ai: GoogleGenAI | null = null;
+
+const getAiClient = () => {
+  if (!ai) {
+    // Initialize only when needed to prevent "process is not defined" error on initial page load
+    // in environments where process.env might be unstable at boot time.
+    ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  }
+  return ai;
+};
+
 export const analyzeMoodAndGetQuests = async (context?: string): Promise<MoodAnalysisResult> => {
   try {
+    const client = getAiClient();
+    
     const prompt = `
       당신은 "라이프 RPG"의 게임 마스터입니다. 사용자에게 오늘 수행할 퀘스트를 부여하세요.
       
@@ -59,7 +69,7 @@ export const analyzeMoodAndGetQuests = async (context?: string): Promise<MoodAna
       반드시 한국어로 응답하세요.
     `;
 
-    const response = await ai.models.generateContent({
+    const response = await client.models.generateContent({
       model: MODEL_NAME,
       contents: prompt,
       config: {
@@ -76,6 +86,16 @@ export const analyzeMoodAndGetQuests = async (context?: string): Promise<MoodAna
     }
   } catch (error) {
     console.error("Gemini API Error:", error);
+    
+    // Check if error is related to API Key
+    if (error instanceof Error && (error.message.includes("API key") || error.message.includes("process"))) {
+       return {
+        moodScore: 0,
+        analysis: "API 키 설정 오류: Vercel 환경 변수에 API_KEY가 설정되어 있는지 확인해주세요.",
+        suggestedQuests: []
+      };
+    }
+
     // Fallback if API fails
     return {
       moodScore: 5,
